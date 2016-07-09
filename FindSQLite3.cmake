@@ -28,7 +28,7 @@
 #   include_directories(${SQLITE3_INCLUDE_DIR})
 #   target_link_libraries(myapp ${SQLITE3_LIBRARY})
 #   # with CMake >= 3.0.0, the last two lines can be replaced by the following
-#   target_link_libraries(myapp SQLite3::SQLite3)
+#   target_link_libraries(myapp SQLite3::SQLite3) # Note: case also matters here
 #
 
 
@@ -84,7 +84,7 @@ endif(PKG_CONFIG_FOUND)
 find_path(
     ${SQLITE3_PUBLIC_VAR_NS}_INCLUDE_DIR
     NAMES sqlite3.h
-    PATHS ${PC_SQLITE3_PRIVATE_VAR_NS}_INCLUDE_DIRS
+    PATHS ${${PC_SQLITE3_PRIVATE_VAR_NS}_INCLUDE_DIRS}
     PATH_SUFFIXES "include"
 )
 
@@ -109,7 +109,7 @@ else(MSVC)
     find_library(
         ${SQLITE3_PUBLIC_VAR_NS}_LIBRARY
         NAMES sqlite3
-        PATHS ${PC_SQLITE3_PRIVATE_VAR_NS}_LIBRARY_DIRS
+        PATHS ${${PC_SQLITE3_PRIVATE_VAR_NS}_LIBRARY_DIRS}
     )
 endif(MSVC)
 
