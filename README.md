@@ -2,6 +2,20 @@ Target: CMake >= 2.8.3
 
 Licence: BSD
 
+CMake modules to find:
+    * libraries
+        + edit(line)
+        + fuse
+        + git2
+        + hiredis
+        + libmemcached
+        + mysql(client)
+        + pcre
+        + sqlite3
+    * others
+        + re2c (build C or C++ lexer)
+        + Varnish (build VMod)
+
 For usage, report to header in Find*.cmake files. (you can grab a single file, they do not depend on each other)
 
 Notes:
