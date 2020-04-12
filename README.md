@@ -1,8 +1,9 @@
 Target: CMake >= 2.8.3
 
-Licence: BSD
+Licence: BSD-2 clause
 
 CMake modules to find:
+
     * libraries
         + edit(line)
         + fuse
