@@ -60,6 +60,13 @@ endfunction(pcre_debug)
 
 ########## Public ##########
 
+# pkg-config --list-all | grep -i pcre
+# libpcreposix                   libpcreposix - PCREPosix - Posix compatible interface to libpcre
+# libpcre16                      libpcre16 - PCRE - Perl compatible regular expressions C library with 16 bit character support
+# libpcre                        libpcre - PCRE - Perl compatible regular expressions C library with 8 bit character support
+# libpcre32                      libpcre32 - PCRE - Perl compatible regular expressions C library with 32 bit character support
+# libpcrecpp                     libpcrecpp - PCRECPP - C++ wrapper for PCRE
+
 # Try to find pcre with the help of pcre-config
 find_program(${PCRE_PUBLIC_VAR_NS}_CONFIG_EXECUTABLE pcre-config)
 if(${PCRE_PUBLIC_VAR_NS}_CONFIG_EXECUTABLE)
