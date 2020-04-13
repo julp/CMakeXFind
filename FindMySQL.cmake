@@ -100,10 +100,12 @@ if(${MYSQL_PUBLIC_VAR_NS}_CONFIG_EXECUTABLE)
     _mysql_set_dotted_version("${${MYSQL_PUBLIC_VAR_NS}_MYSQL_CONFIG_VERSION}")
 endif(${MYSQL_PUBLIC_VAR_NS}_CONFIG_EXECUTABLE)
 
+set(${MYSQL_PRIVATE_VAR_NS}_COMMON_FIND_OPTIONS PATH_SUFFIXES mysql)
+
 find_path(
     ${MYSQL_PUBLIC_VAR_NS}_INCLUDE_DIR
     NAMES mysql_version.h
-    PATH_SUFFIXES include mysql
+    ${${MYSQL_PRIVATE_VAR_NS}_COMMON_FIND_OPTIONS}
     PATHS ${${PC_MYSQL_PRIVATE_VAR_NS}_INCLUDE_DIRS} ${${MYSQL_PUBLIC_VAR_NS}_MYSQL_CONFIG_INCLUDE_DIR}
 )
 
@@ -117,11 +119,13 @@ if(MSVC)
         ${MYSQL_PUBLIC_VAR_NS}_LIBRARY_RELEASE
         NAMES ${${MYSQL_PRIVATE_VAR_NS}_POSSIBLE_RELEASE_NAMES}
         DOC "Release library for mysqlclient"
+        ${${MYSQL_PRIVATE_VAR_NS}_COMMON_FIND_OPTIONS}
     )
     find_library(
         ${MYSQL_PUBLIC_VAR_NS}_LIBRARY_DEBUG
         NAMES ${${MYSQL_PRIVATE_VAR_NS}_POSSIBLE_DEBUG_NAMES}
         DOC "Debug library for mysqlclient"
+        ${${MYSQL_PRIVATE_VAR_NS}_COMMON_FIND_OPTIONS}
     )
 
     select_library_configurations("${MYSQL_PUBLIC_VAR_NS}")
@@ -129,8 +133,9 @@ else(MSVC)
     # "On Unix (and Unix-like) sytems, the static library is libmysqlclient.a. The dynamic library is libmysqlclient.so on most Unix systems and libmysqlclient.dylib on OS X."
     find_library(
         ${MYSQL_PUBLIC_VAR_NS}_LIBRARY
-        NAMES mysqlclient
+        NAMES mysqlclient mysql
         PATHS ${${MYSQL_PUBLIC_VAR_NS}_MYSQL_CONFIG_LIBRARY_DIR}
+        ${${MYSQL_PRIVATE_VAR_NS}_COMMON_FIND_OPTIONS}
     )
 endif(MSVC)
 
