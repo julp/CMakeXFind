@@ -33,13 +33,17 @@
 
 
 #=============================================================================
-# Copyright (c) 2013-2016, julp
+# Copyright (c) 2013-2020, julp
 #
 # Distributed under the OSI-approved BSD License
 #
 # This software is distributed WITHOUT ANY WARRANTY; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #=============================================================================
+
+# TODO:
+# - mariadb support?
+# - on Windows, lookup for related registry keys
 
 cmake_minimum_required(VERSION 2.8.3)
 
@@ -109,35 +113,35 @@ find_path(
     PATHS ${${PC_MYSQL_PRIVATE_VAR_NS}_INCLUDE_DIRS} ${${MYSQL_PUBLIC_VAR_NS}_MYSQL_CONFIG_INCLUDE_DIR}
 )
 
-if(MSVC)
+if(WIN32)
     include(SelectLibraryConfigurations)
     # "On Windows, the static library is mysqlclient.lib and the dynamic library is libmysql.dll. Windows distributions also include libmysql.lib, a static import library needed for using the dynamic library."
-    set(${MYSQL_PRIVATE_VAR_NS}_POSSIBLE_DEBUG_NAMES "mysqld mysqlclientd")
-    set(${MYSQL_PRIVATE_VAR_NS}_POSSIBLE_RELEASE_NAMES "mysql mysqlclient")
+    set(${MYSQL_PRIVATE_VAR_NS}_POSSIBLE_NAMES "mysql" "mysqlclient")
 
     find_library(
         ${MYSQL_PUBLIC_VAR_NS}_LIBRARY_RELEASE
-        NAMES ${${MYSQL_PRIVATE_VAR_NS}_POSSIBLE_RELEASE_NAMES}
+        NAMES ${${MYSQL_PRIVATE_VAR_NS}_POSSIBLE_NAMES}
         DOC "Release library for mysqlclient"
         ${${MYSQL_PRIVATE_VAR_NS}_COMMON_FIND_OPTIONS}
     )
+    # "Windows distributions also include a set of debug libraries. These have the same names as the nondebug libraries, but are located in the lib/debug library. You must use the debug libraries when compiling clients built using the debug C runtime."
     find_library(
         ${MYSQL_PUBLIC_VAR_NS}_LIBRARY_DEBUG
-        NAMES ${${MYSQL_PRIVATE_VAR_NS}_POSSIBLE_DEBUG_NAMES}
+        NAMES ${${MYSQL_PRIVATE_VAR_NS}_POSSIBLE_NAMES}
         DOC "Debug library for mysqlclient"
-        ${${MYSQL_PRIVATE_VAR_NS}_COMMON_FIND_OPTIONS}
+        PATH_SUFFIXES mysql/debug debug
     )
 
     select_library_configurations("${MYSQL_PUBLIC_VAR_NS}")
-else(MSVC)
+else(WIN32)
     # "On Unix (and Unix-like) sytems, the static library is libmysqlclient.a. The dynamic library is libmysqlclient.so on most Unix systems and libmysqlclient.dylib on OS X."
     find_library(
         ${MYSQL_PUBLIC_VAR_NS}_LIBRARY
-        NAMES mysqlclient mysql
+        NAMES mysqlclient
         PATHS ${${PC_MYSQL_PRIVATE_VAR_NS}_LIBRARY_DIRS} ${${MYSQL_PUBLIC_VAR_NS}_MYSQL_CONFIG_LIBRARY_DIR}
         ${${MYSQL_PRIVATE_VAR_NS}_COMMON_FIND_OPTIONS}
     )
-endif(MSVC)
+endif(WIN32)
 
 if(${MYSQL_PUBLIC_VAR_NS}_INCLUDE_DIR AND NOT ${MYSQL_PUBLIC_VAR_NS}_VERSION)
     file(STRINGS "${${MYSQL_PUBLIC_VAR_NS}_INCLUDE_DIR}/mysql_version.h" ${MYSQL_PRIVATE_VAR_NS}_VERSION_NUMBER_DEFINITION LIMIT_COUNT 1 REGEX ".*#[ \t]*define[ \t]*MYSQL_VERSION_ID[ \t]*[0-9]+.*")
